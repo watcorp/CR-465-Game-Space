@@ -1,0 +1,31 @@
+nextcloud-db:
+  image: mariadb:latest
+  container_name: nextcloud-db
+  environment:
+    - MYSQL_ROOT_PASSWORD=mysecret
+    - MYSQL_DATABASE=nextcloud
+    - MYSQL_USER=nextcloud
+    - MYSQL_PASSWORD=nextcloudpw
+  volumes:
+    - nextcloud-db-data:/var/lib/mysql
+  restart: always
+ 
+nextcloud:
+  image: nextcloud:latest
+  container_name: nextcloud
+  ports:
+    - "8080:80"
+  environment:
+    - MYSQL_DATABASE=nextcloud
+    - MYSQL_USER=nextcloud
+    - MYSQL_PASSWORD=nextcloudpw
+    - MYSQL_HOST=nextcloud-db
+  volumes:
+    - nextcloud-data:/var/www/html
+  depends_on:
+    - nextcloud-db
+  restart: always
+ 
+volumes:
+  nextcloud-db-data:
+  nextcloud-data:
